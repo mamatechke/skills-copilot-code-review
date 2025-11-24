@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
 
+  // Announcement banner and footer
+  const announcementBanner = document.getElementById("announcement-banner");
+  const announcementDismiss = document.getElementById("announcement-dismiss");
+  const footerYear = document.getElementById("footer-year");
+
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
@@ -860,6 +865,33 @@ document.addEventListener("DOMContentLoaded", () => {
     setDayFilter,
     setTimeRangeFilter,
   };
+  // Set footer year dynamically
+  if (footerYear) {
+    try {
+      footerYear.textContent = new Date().getFullYear();
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // Announcement banner: respect dismissal stored in localStorage
+  if (announcementBanner) {
+    const dismissed = localStorage.getItem("announcementDismissed");
+    if (dismissed === "true") {
+      announcementBanner.classList.add("hidden");
+    }
+
+    if (announcementDismiss) {
+      announcementDismiss.addEventListener("click", () => {
+        announcementBanner.classList.add("hidden");
+        try {
+          localStorage.setItem("announcementDismissed", "true");
+        } catch (e) {
+          // localStorage could be disabled; fail silently
+        }
+      });
+    }
+  }
 
   // Initialize app
   checkAuthentication();
